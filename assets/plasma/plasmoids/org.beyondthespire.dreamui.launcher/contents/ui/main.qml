@@ -10,8 +10,9 @@ PlasmoidItem {
     id: root
     Plasmoid.icon: "start-here"
     Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
-    switchWidth: 0
-    switchHeight: 0
+    preferredRepresentation: compactRepresentation
+    switchWidth: fullRepresentationItem ? fullRepresentationItem.Layout.minimumWidth : 330
+    switchHeight: fullRepresentationItem ? fullRepresentationItem.Layout.minimumHeight : 480
     property bool allApplications: false
     property var allAppsModel: null
     property var matches: null
