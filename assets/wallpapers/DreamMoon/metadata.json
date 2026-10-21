@@ -1,0 +1,15 @@
+{
+  "KPlugin": {
+    "Name": "Dream Moon",
+    "Id": "DreamMoon",
+    "Version": "0.1.0",
+    "Description": "DreamUI \u2014 comfort, ease, and nostalgia",
+    "Authors": [
+      {
+        "Name": "DreamUI contributors"
+      }
+    ],
+    "Website": "https://github.com/beyondthespire/DreamUI"
+  },
+  "KPackageStructure": "Wallpaper/Images"
+}

@@ -1,0 +1,15 @@
+{
+  "KPlugin": {
+    "Name": "DreamUI Violet",
+    "Id": "org.beyondthespire.dreamui.violet",
+    "Version": "0.1.0",
+    "Description": "DreamUI \u2014 comfort, ease, and nostalgia",
+    "Authors": [
+      {
+        "Name": "DreamUI contributors"
+      }
+    ],
+    "Website": "https://github.com/beyondthespire/DreamUI"
+  },
+  "KPackageStructure": "Plasma/LookAndFeel"
+}

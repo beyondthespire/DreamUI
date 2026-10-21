@@ -1,0 +1,14 @@
+[Settings]
+FallbackTheme=default
+
+[BlurBehindEffect]
+enabled=true
+
+[ContrastEffect]
+enabled=false
+
+[Wallpaper]
+defaultWallpaperTheme=DreamMoon
+defaultFileSuffix=.png
+defaultWidth=2560
+defaultHeight=1440
