@@ -1,0 +1,14 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Id": "org.beyondthespire.dreamui.launcher",
+    "Name": "Dream Launcher",
+    "Description": "A compact glass launcher with favorites, applications and search",
+    "Version": "0.2.0",
+    "Category": "Application Launchers",
+    "Icon": "start-here",
+    "Authors": [{"Name": "DreamUI contributors"}]
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-Provides": ["org.kde.plasma.launchermenu"]
+}

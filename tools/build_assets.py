@@ -7,7 +7,7 @@ import html
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / 'assets'
-VERSION = '0.1.0'
+VERSION = '0.2.0'
 
 def write(path, content):
     path = ROOT / path
@@ -122,6 +122,8 @@ name=dreamui
 [kwinrc][org.kde.kdecoration2]
 library=org.kde.kwin.aurorae
 theme=__aurorae__svg__DreamGlass
+ButtonsOnLeft=M
+ButtonsOnRight=IAX
 ''')
     base='assets/plasma/desktoptheme/dreamui'
     metadata=json.loads(meta('DreamUI Glass','dreamui'))
@@ -142,14 +144,14 @@ defaultFileSuffix=.png
 defaultWidth=2560
 defaultHeight=1440
 ''')
-    write(f'{base}/colors',palette('Dream Glass','112,166,235',True).split('[WM]')[0])
+    write(f'{base}/colors',palette('Dream Glass','54,112,191',False).split('[WM]')[0])
     for file in ['widgets/panel-background.svg','dialogs/background.svg','widgets/background.svg','widgets/tooltip.svg']:
         for opaque in [False,True]:
-            defs=f'<defs>{gradient("glass", "#627eaa", "#233b66")}</defs>'
-            body=defs+frame(opacity=1 if opaque else .93)+frame('mask','#000000',1,60)
+            defs=f'<defs>{gradient("glass", "#e9f3ff", "#c1d5ea")}</defs>'
+            body=defs+frame(color='#c7dbef',opacity=1 if opaque else .96)+frame('mask','#000000',1,60)
             if 'panel-' in file:
                 for i, direction in enumerate(['north','south','east','west']):
-                    body+=frame(direction,opacity=1 if opaque else .93,offset=120+i*60)
+                    body+=frame(direction,color='#c7dbef',opacity=1 if opaque else .96,offset=120+i*60)
             body+='<rect id="hint-stretch-borders" x="0" y="64" width="1" height="1"/>'
             write(f'{base}/{"opaque/" if opaque else ""}{file}',svg(body,420,70))
 
@@ -225,7 +227,7 @@ Name=Dream Glass
 Comment=Original blue glass window frames for DreamUI
 X-KDE-PluginInfo-Name=DreamGlass
 X-KDE-PluginInfo-Author=DreamUI contributors
-X-KDE-PluginInfo-Version=0.1.1
+X-KDE-PluginInfo-Version=0.2.0
 X-KDE-PluginInfo-Website=https://github.com/beyondthespire/DreamUI
 ''')
     write(f'{base}/DreamGlassrc','''[General]
@@ -261,6 +263,7 @@ ButtonMarginTop=0
     for i,p in enumerate(['decoration','decoration-inactive','decoration-opaque','decoration-opaque-inactive']):
         body+=window_frame(p,inactive='inactive' in p,opaque='opaque' in p,offset=i*90)
     body+=window_frame('mask',mask=True,offset=360)
+    body+='<rect id="hint-stretch-borders" x="449" y="79" width="1" height="1"/>'
     write(f'{base}/decoration.svg',svg(body,450,80))
     for kind in BUTTON_GLYPHS:
         width=46 if kind=='close' else 28

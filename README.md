@@ -6,103 +6,70 @@ DreamUI is a nostalgic appearance layer for **KDE Plasma 6**, developed for the
 SoñoOS desktop project. Blue glass, pearl application interiors, glossy icons,
 and a quiet moonlit landscape. KDE continues to handle the desktop and applications.
 
-**0.1.0 — experimental foundation.** Theme assets and deployment tests are in place;
-live Plasma rendering and Debian/Ubuntu desktop compatibility still need testing.
-There is no ISO in this release.
+**0.2.0 — experimental desktop installer.** No ISO is required.
 
-![DreamUI desktop visual target](docs/design/desktop-concept.png)
+[Desktop design reference](docs/design/desktop-concept.png) — a visual target,
+not a screenshot. DreamUI now includes its own launcher, clock/media sidebar,
+and desktop shortcuts. Application interiors still use Breeze controls.
 
-*Design concept, not an installed-desktop screenshot. The illustrated launcher,
-sidebar, and application controls are visual targets; this starter uses stock KDE
-widgets and Breeze application controls.*
+## Install the complete desktop
 
-## Included
-
-| Component | Current implementation |
-| --- | --- |
-| Global themes | DreamUI Blue and DreamUI Violet |
-| Application colors | Two light schemes; Breeze provides controls |
-| Plasma style | Glossy blue panel, dialog, tooltip and desktop-widget backgrounds, with opaque alternatives |
-| Window frames | Dream Glass Aurorae decoration and nine button types |
-| Icons | Nine original SVG icons; Breeze supplies the rest |
-| Wallpaper | Original Dream Moon, SVG source and 2560×1440 PNG |
-| Panel | Optional bottom panel with launcher, labeled tasks, tray and clock |
-| Deployment | Per-user install/update, settings snapshot, asset conflict detection and uninstall |
-
-The violet option currently changes application colors; glass and frames remain
-blue. Custom application controls, a full icon set, sidebar widgets, and a custom
-launcher are later milestones. See [design notes](docs/DESIGN.md).
-
-## Requirements
-
-- Linux with an existing **Plasma 6** desktop, Breeze, and the Aurorae decoration engine.
-- Git, Python 3.9+, Bash and GNU coreutils.
-- `plasma-apply-lookandfeel` to apply; `plasma-apply-wallpaperimage` for wallpaper.
-- Qt D-Bus command-line tools (`qdbus6`, `qdbus-qt6`, or `qdbus`) only for the optional panel.
-
-Debian/Ubuntu with Plasma 6 are the initial development target. Plasma 5 is not
-supported by this starter. Check your session with `plasmashell --version`.
-This installer does not install KDE or download dependencies.
-
-## Install
-
-Run from a terminal in your KDE session, as your normal user **without sudo**:
-
-```bash
-git clone https://github.com/beyondthespire/DreamUI.git
-cd DreamUI
-./scripts/install.sh --dry-run
-./scripts/install.sh
-./scripts/apply.sh blue --wallpaper
-```
-
-While the initial pull request is unmerged, clone its development branch instead:
+Use an existing **KDE Plasma 6** session on Debian/Ubuntu. Run as your normal
+user, without sudo (the installer asks for sudo only for distribution packages):
 
 ```bash
 git clone --branch feat/dreamui-foundation https://github.com/beyondthespire/DreamUI.git
+cd DreamUI
+./install.sh
 ```
 
-`install.sh` copies assets into `${XDG_DATA_HOME:-~/.local/share}`. It does not apply
-them. `apply.sh` selects the theme and saves the original appearance settings
-before its first change. Omit `--wallpaper` to keep your existing wallpaper.
-Panels and desktop widgets are preserved by default.
-
-For the violet application colors:
-
-```bash
-./scripts/apply.sh violet
-```
-
-Alternatively, select **DreamUI Blue** or **DreamUI Violet** in System Settings →
-Global Theme after installation. Manual settings changes bypass the script's
-settings backup, so run `apply.sh` first if you want automatic restoration.
-
-## Update with git pull
+Already cloned this development branch?
 
 ```bash
 cd DreamUI
 git pull --ff-only
+./install.sh
+```
+
+Log out and back in afterward to clear cached artwork. The installer:
+
+- Installs required Qt/Plasma runtime packages and Dolphin, Konsole, Kate, Gwenview and Elisa.
+- Installs DreamUI Blue/Violet, original icons, Dream Moon wallpaper and Dream Glass window frames.
+- Backs up the original appearance and panel configuration before applying changes.
+- Replaces the screen 0 panel with Dream Launcher, labeled tasks, tray, clock and show-desktop.
+- Adds clock/media and Computer/Home/Trash widgets; preserves unrelated desktop widgets.
+
+Use `./install.sh --variant violet` for violet application colors, `--dry-run`
+to describe changes, or `--skip-dependencies` when packages are already installed.
+Package installation uses your configured repositories and refuses package removals.
+Plasma 5 and automatic installation of a new desktop environment are unsupported.
+
+## Theme-only installation and updates
+
+The older scripts remain available for users who want to preserve their layout:
+
+```bash
+./scripts/install.sh
+./scripts/apply.sh blue --wallpaper
+```
+
+For subsequent asset updates without resetting the panel:
+
+```bash
+git pull --ff-only
 ./scripts/update.sh
 ```
 
-Updates refresh installed assets without reapplying settings. Log out and back in
-if Plasma keeps cached artwork. Updates stop if you modified or deleted managed
-asset files; see [troubleshooting](docs/INSTALL.md). The scripts never reset Git,
-overwrite uncommitted repository work, or remove unrelated theme assets.
+Assets live under `${XDG_DATA_HOME:-~/.local/share}`. All three custom widgets ship
+in the repository; no KDE Store downloads are needed. Media controls use MPRIS
+and become active when a supported player is running. The violet option changes
+application colors; window frames and widgets remain blue. The full installer
+rebuilds the main panel when rerun; use `scripts/update.sh` to retain customizations.
 
-## Optional classic panel
-
-First apply DreamUI normally so the original panel configuration is backed up.
-Then use Plasma Edit Mode to remove the existing panel(s), if you want to replace
-them with this layout, and run:
-
-```bash
-./scripts/apply.sh blue --layout
-```
-
-This creates a bottom panel using stock KDE widgets. It refuses to replace existing
-panels and does not create duplicates. The concept's custom launcher and sidebar
-are not installed. Multi-monitor panel placement needs desktop validation.
+Proxmox guests use the same installer as physical desktops. Actual transparency
+and animation depend on the guest's working graphics/compositor; the script does
+not change Proxmox hardware settings. The design preview is not a promise of
+identical application layouts or glass effects on every graphics driver.
 
 ## Restore and uninstall
 

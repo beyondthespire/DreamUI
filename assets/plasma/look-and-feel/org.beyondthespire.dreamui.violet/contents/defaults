@@ -13,3 +13,5 @@ name=dreamui
 [kwinrc][org.kde.kdecoration2]
 library=org.kde.kwin.aurorae
 theme=__aurorae__svg__DreamGlass
+ButtonsOnLeft=M
+ButtonsOnRight=IAX

@@ -16,13 +16,26 @@ jobs:
         run: python3 -m unittest discover -s tests -v
       - name: Check shell syntax
         run: |
-          for script in scripts/*.sh; do
+          for script in install.sh scripts/*.sh; do
             bash -n "$script"
           done
       - name: Check panel script syntax
-        run: node --check layouts/classic-panel.js
+        run: |
+          node --check layouts/classic-panel.js
+          node --check layouts/full-desktop.js
       - name: Check vector source reproducibility
         run: |
           python3 tools/build_assets.py
           python3 tools/build_preview.py
           git diff --exit-code -- assets docs/design/desktop-concept.svg
+  plasma-widgets:
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Plasma 6 runtime
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends plasma-desktop plasma-workspace dbus-x11 xvfb xauth qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts qml6-module-qtqml-workerscript qml6-module-qtquick-window qml6-module-qtcore breeze-icon-theme python3
+      - name: Load custom widgets with software rendering
+        run: python3 tools/smoke_widgets.py

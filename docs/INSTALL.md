@@ -1,3 +1,28 @@
+# Complete desktop setup (0.2)
+
+From an existing Plasma 6 terminal on Debian/Ubuntu, run `./install.sh` in the
+repository. This installs distribution dependencies, applies the wallpaper and
+appearance, replaces screen 0 panels, and adds the bundled DreamUI widgets.
+Do not run the whole script with sudo. Dependencies require an internet connection.
+Use `./install.sh --dry-run` to see the scope without changing anything.
+
+The original settings snapshot is saved in
+`${XDG_STATE_HOME:-~/.local/state}/dreamui/installation.json` before the first
+application. Restoration instructions are in README.md. Distribution packages
+are retained on uninstall, because other applications may use them.
+
+On other distributions install Plasma 6, Breeze, Aurorae, the Qt 6 Quick/Controls/
+Layouts/Core/WorkerScript QML modules, Qt SVG support, Qt qdbus, KDE CLI tools,
+Dolphin, Konsole, Kate, Gwenview and Elisa using your package manager; then run
+`./install.sh --skip-dependencies`. This route has not been distribution-tested.
+
+If newly installed widgets are not discovered, log out/in and rerun with
+`--skip-dependencies`. The installer restarts the systemd-managed Plasma shell
+when available. It checks all required widget IDs before replacing any panel.
+For persistent errors, copy terminal output and `plasmashell --version` into an issue.
+
+## Legacy theme-only workflow
+
 # Installation behavior and recovery
 
 ## File ownership
