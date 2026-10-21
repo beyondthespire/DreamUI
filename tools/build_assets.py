@@ -153,6 +153,71 @@ defaultHeight=1440
             body+='<rect id="hint-stretch-borders" x="0" y="64" width="1" height="1"/>'
             write(f'{base}/{"opaque/" if opaque else ""}{file}',svg(body,420,70))
 
+BUTTON_GLYPHS={'close':'M-4-4l8 8m0-8l-8 8','minimize':'M-4 3h8v1h-8z',
+    'maximize':'M-4-4h8v8h-8z M-4-2h8',
+    'restore':'M-5-1h7v6h-7z M-2-1v-4h7v6H2',
+    'alldesktops':'M0-5v10 M-5 0h10','keepabove':'M-4 2l4-4 4 4',
+    'keepbelow':'M-4-2l4 4 4-4','shade':'M-5-4H5 M-4 3l4-4 4 4',
+    'help':'M-3-3q3-4 6 0q0 2-3 3v1 M0 4v1'}
+
+def window_defs():
+    """Shared renderer definitions keep the concept and installed buttons aligned."""
+    palettes={
+        'window-glass':[(0,'#d5e7f2'),(.35,'#b3cee3'),(.7,'#84a9cc'),(1,'#b9d5e9')],
+        'window-inactive':[(0,'#e1e9ef'),(.6,'#bfcedb'),(1,'#cddae6')],
+        'caption':[(0,'#e1eff8'),(.48,'#adcadf'),(.52,'#80a4c5'),(1,'#b1cee5')],
+        'caption-hover':[(0,'#d4f7ff'),(.48,'#8ad9fa'),(.52,'#339bcf'),(1,'#a5e6ff')],
+        'caption-pressed':[(0,'#3a759e'),(1,'#90bad6')],
+        'caption-inactive':[(0,'#d7e2eb'),(1,'#b6c7d6')],
+        'caption-close':[(0,'#e6b3aa'),(.48,'#d98474'),(.52,'#b64b38'),(1,'#d38a70')],
+        'caption-close-hover':[(0,'#ffcfb7'),(.48,'#f48c68'),(.52,'#d73818'),(1,'#ef9a71')],
+        'caption-close-pressed':[(0,'#8d2c24'),(1,'#cb6350')],
+    }
+    return ''.join(f'<linearGradient id="{name}" x1="0" y1="0" x2="0" y2="1">'+
+        ''.join(f'<stop offset="{offset}" stop-color="{color}"/>' for offset,color in stops)+
+        '</linearGradient>' for name,stops in palettes.items())
+
+def window_button(kind,state='active'):
+    width=46 if kind=='close' else 28
+    style='caption-close' if kind=='close' else 'caption'
+    if 'pressed' in state: style+='-pressed'
+    elif 'hover' in state: style+='-hover'
+    elif 'inactive' in state or 'deactivated' in state: style='caption-inactive'
+    # Only the outside lower corners round over, so the three buttons form a group.
+    if kind=='close': shape=f'M.5 .5H{width-.5}V16Q{width-.5} 20.5 {width-5} 20.5H.5Z'
+    elif kind=='minimize': shape=f'M.5 .5H{width-.5}V20.5H5Q.5 20.5 .5 16Z'
+    else: shape=f'M.5 .5H{width-.5}V20.5H.5Z'
+    return (f'<g opacity="{.5 if "deactivated" in state else 1}">'+
+        f'<path d="{shape}" fill="url(#{style})" stroke="#57728d" stroke-width="1"/>'+
+        f'<path d="M1.5 1.5H{width-1.5}" stroke="#fff" stroke-opacity=".8"/>'+
+        f'<g transform="translate({width/2},10)" fill="none" stroke-linejoin="miter">'+
+        f'<path d="{BUTTON_GLYPHS[kind]}" transform="translate(0,1)" stroke="#183852" stroke-opacity=".7" stroke-width="2.2"/>'+
+        f'<path d="{BUTTON_GLYPHS[kind]}" stroke="#fff" stroke-width="1.5"/></g></g>')
+
+def window_frame(prefix, inactive=False, opaque=False, offset=0, mask=False):
+    # The title gradient belongs to the 32px top tiles, not the whole window.
+    p=prefix+'-'
+    fill='#000' if mask else 'url(#window-inactive)' if inactive else 'url(#window-glass)'
+    edge='#000' if mask else '#b1c7db' if inactive else '#96b8d6'
+    opacity=1 if opaque or mask else .86
+    tiles={
+      'topleft':f'<path d="M6 0Q0 0 0 6V32H6Z" fill="{fill}"/>',
+      'top':f'<rect x="6" width="64" height="32" fill="{fill}"/>',
+      'topright':f'<path d="M70 0Q76 0 76 6V32H70Z" fill="{fill}"/>',
+      'left':f'<rect y="32" width="6" height="40" fill="{edge}"/>',
+      'right':f'<rect x="70" y="32" width="6" height="40" fill="{edge}"/>',
+      'center':'<rect x="6" y="32" width="64" height="40" fill="#000" fill-opacity="0"/>',
+      'bottomleft':f'<path d="M0 72Q0 78 6 78V72Z" fill="{edge}"/>',
+      'bottom':f'<rect x="6" y="72" width="64" height="6" fill="{edge}"/>',
+      'bottomright':f'<path d="M70 78Q76 78 76 72H70Z" fill="{edge}"/>',
+    }
+    if not mask:
+        tiles['top']+='<path d="M6 .5H70" stroke="#4e708f"/><path d="M6 1.5H70" stroke="#f0faff" stroke-opacity=".85"/>'
+        tiles['left']+='<path d="M.5 32V72" stroke="#4e708f"/><path d="M1.5 32V72" stroke="#e1f1fc" stroke-opacity=".7"/>'
+        tiles['right']+='<path d="M75.5 32V72" stroke="#4e708f"/><path d="M74.5 32V72" stroke="#e1f1fc" stroke-opacity=".7"/>'
+        tiles['bottom']+='<path d="M6 77.5H70" stroke="#4e708f"/><path d="M6 76.5H70" stroke="#e1f1fc" stroke-opacity=".7"/>'
+    return ''.join(f'<g id="{p}{name}" transform="translate({offset},0)" opacity="{opacity}">{art}</g>' for name,art in tiles.items())
+
 def decoration():
     base='assets/aurorae/themes/DreamGlass'
     write(f'{base}/metadata.desktop','''[Desktop Entry]
@@ -160,17 +225,17 @@ Name=Dream Glass
 Comment=Original blue glass window frames for DreamUI
 X-KDE-PluginInfo-Name=DreamGlass
 X-KDE-PluginInfo-Author=DreamUI contributors
-X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Version=0.1.1
 X-KDE-PluginInfo-Website=https://github.com/beyondthespire/DreamUI
 ''')
     write(f'{base}/DreamGlassrc','''[General]
 TitleAlignment=Left
 TitleVerticalAlignment=Center
-ActiveTextColor=248,251,255
-InactiveTextColor=220,228,244
+ActiveTextColor=24,43,64
+InactiveTextColor=73,91,111
 UseTextShadow=true
-ActiveTextShadowColor=13,26,55
-InactiveTextShadowColor=30,40,61
+ActiveTextShadowColor=240,249,255
+InactiveTextShadowColor=228,238,249
 TextShadowOffsetY=1
 Animation=120
 LeftButtons=M
@@ -181,36 +246,29 @@ Shadow=false
 BorderLeft=6
 BorderRight=6
 BorderBottom=6
-TitleEdgeTop=4
-TitleEdgeBottom=4
+TitleEdgeTop=1
+TitleEdgeBottom=7
 TitleEdgeLeft=7
 TitleEdgeRight=7
 TitleHeight=24
 ButtonWidth=28
-ButtonWidthClose=36
-ButtonHeight=22
-ButtonSpacing=2
+ButtonWidthClose=46
+ButtonHeight=21
+ButtonSpacing=0
 ButtonMarginTop=0
 ''')
-    body=f'<defs>{gradient("glass","#6f93c2","#294e82")}</defs>'
+    body='<defs>'+window_defs()+'</defs>'
     for i,p in enumerate(['decoration','decoration-inactive','decoration-opaque','decoration-opaque-inactive']):
-        body+=frame(p,opacity=1 if 'opaque' in p else .94,offset=i*60)
-    body+=frame('mask','#000000',1,240)
-    write(f'{base}/decoration.svg',svg(body,300,70))
-    glyphs={'close':'M11 7l8 8m0-8l-8 8','minimize':'M10 15h10',
-            'maximize':'M10 7h10v9H10z M10 9h10','restore':'M9 10h9v7H9z M12 10V6h9v8h-3',
-            'alldesktops':'M15 5v12 M9 11h12','keepabove':'M9 14l6-6 6 6',
-            'keepbelow':'M9 8l6 6 6-6','shade':'M9 7h12 M9 15l6-5 6 5',
-            'help':'M11 8q4-6 8 0q0 3-4 4v1 M15 16v1'}
-    for kind,glyph in glyphs.items():
-        out=f'<defs>{gradient("button", "#a5c4e5", "#376294")}{gradient("red","#f3aaa9","#9c3e55")}</defs>'
-        for i,state in enumerate(['active','inactive','hover','hover-inactive','pressed','pressed-inactive','deactivated','deactivated-inactive']):
-            fill='url(#red)' if kind=='close' else 'url(#button)'
-            if 'pressed' in state: fill='#244a75'
-            out+=f'<g id="{state}-center" transform="translate({i*34},0)" opacity="{.5 if "deactivated" in state else 1}"><rect x=".5" y=".5" width="29" height="21" rx="3" fill="{fill}" stroke="#b3cce6" stroke-opacity=".8"/>'
-            if 'hover' in state: out+='<rect x="1" y="1" width="28" height="20" rx="3" fill="#d5f3ff" opacity=".25"/>'
-            out+=f'<path d="{glyph}" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>'
-        write(f'{base}/{kind}.svg',svg(out,272,22))
+        body+=window_frame(p,inactive='inactive' in p,opaque='opaque' in p,offset=i*90)
+    body+=window_frame('mask',mask=True,offset=360)
+    write(f'{base}/decoration.svg',svg(body,450,80))
+    for kind in BUTTON_GLYPHS:
+        width=46 if kind=='close' else 28
+        out='<defs>'+window_defs()+'</defs>'
+        states=['active','inactive','hover','hover-inactive','pressed','pressed-inactive','deactivated','deactivated-inactive']
+        for i,state in enumerate(states):
+            out+=f'<g id="{state}-center" transform="translate({i*(width+4)},0)">'+window_button(kind,state)+'</g>'
+        write(f'{base}/{kind}.svg',svg(out,8*(width+4),21))
 
 def icons():
     folder='<path d="M7 17q0-4 4-4h17l6 6h19q4 0 4 4v28H7z" fill="#426ca6" stroke="#244b7e"/><path d="M7 25h50l-4 28H11z" fill="url(#i)" stroke="#3973ae"/><path d="M9 27h46" stroke="#e8f8ff"/>'

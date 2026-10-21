@@ -2,6 +2,7 @@
 """Editable SVG concept board using the actual DreamUI icon and wallpaper assets."""
 from pathlib import Path
 import base64
+from build_assets import window_defs, window_button
 from html import escape
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -30,11 +31,17 @@ def build():
     '<g transform="translate(64,94)">',image('assets/wallpapers/DreamMoon/contents/images/2560x1440.svg',0,0,1472,828)]
     for name,label,y in [('devices/computer','Computer',24),('places/user-home','Home',124),('places/user-trash','Trash',224)]:
         s += [icon(name,29,y,52),text(21 if label=='Computer' else 37,y+73,label,13,'#eff5ff')]
-    # Main window: concept for mature application styling; initial version uses Breeze.
-    s += [rect(295,144,880,531,'#061126',9),rect(288,134,880,531,'url(#glass)',8,'#9ebfe8'),
-          text(303,158,'Home — Dolphin',14,'#f5faff',500)]
-    for x,glyph,fill,w in [(1053,'−','url(#glass)',28),(1082,'□','url(#glass)',28),(1111,'×','#a75b70',44)]:
-        s += [rect(x,139,w,23,fill,3,'#a6bbd8'),text(x+9,155,glyph,16,'#fff')]
+    s += ['<defs>'+window_defs()+'</defs>']
+    # Main window: shared caption artwork; application interior remains a concept.
+    s += [rect(291,139,880,531,'#122340',8),
+          rect(288,134,880,531,'url(#window-glass)',7,'#456684'),
+          rect(289,135,878,529,'none',6,'#dbeefb'),
+          rect(290,136,876,33,'url(#window-glass)',5),
+          icon('places/folder',300,143,18),
+          text(326,158,'Home — Dolphin',13,'#f5fbff'),
+          text(326,157,'Home — Dolphin',13,'#1a3047')]
+    for x,kind in [(1054,'minimize'),(1082,'maximize'),(1110,'close')]:
+        s += [f'<g transform="translate({x},135)">'+window_button(kind)+'</g>']
     s += [rect(295,170,866,488,'#fbfdff'),rect(295,170,866,29,'#f5f8ff'),
           text(310,190,'File     Edit     View     Go     Tools     Settings     Help',13),
           rect(295,199,866,48,'url(#toolbar)'),rect(308,208,29,29,'url(#select)',14,'#95b7da'),text(316,229,'‹',23),
@@ -77,6 +84,8 @@ def build():
     result=''.join(s).replace(' href=',' xlink:href=')
     out=ROOT/'docs/design/desktop-concept.svg'
     out.write_text(result+'\n')
+    detail=result.replace('width="1600" height="1060" viewBox="0 0 1600 1060"', 'width="1200" height="100" viewBox="344 221 900 75"', 1)
+    (ROOT/'docs/design/window-detail.svg').write_text(detail+'\n')
     print(out)
 
 if __name__=='__main__': build()
