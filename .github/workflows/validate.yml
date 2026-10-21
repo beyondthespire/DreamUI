@@ -23,6 +23,7 @@ jobs:
         run: |
           node --check layouts/classic-panel.js
           node --check layouts/full-desktop.js
+          node tests/test_layout.js
       - name: Check vector source reproducibility
         run: |
           python3 tools/build_assets.py
@@ -36,6 +37,7 @@ jobs:
       - name: Install Plasma 6 runtime
         run: |
           apt-get update
-          apt-get install -y --no-install-recommends plasma-desktop plasma-workspace dbus-x11 xvfb xauth qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts qml6-module-qtqml-workerscript qml6-module-qtquick-window qml6-module-qtcore breeze-icon-theme python3
+          apt-get install -y --no-install-recommends python3 dbus-x11 xvfb xauth
+          python3 -c "import sys, subprocess; sys.path.insert(0, 'scripts'); from setup import PACKAGES; subprocess.run(['apt-get', 'install', '-y', '--no-install-recommends', *PACKAGES], check=True)"
       - name: Load custom widgets with software rendering
         run: python3 tools/smoke_widgets.py

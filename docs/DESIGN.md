@@ -19,16 +19,17 @@ that vocabulary into an original KDE appearance layer.
 
 Use compact controls, modest corner rounding, one bright edge, and readable solid
 application interiors. Transparency belongs to window frames and the shell rather
-than every content surface. Preserve the user's font and cursor choices in v0.1.
+than every content surface. Preserve the user's font and cursor choices.
 Pixel text belongs in optional decorative artwork, not everyday application text.
 
 ## What the concept represents
 
 `design/desktop-concept.svg` is an editable composition built with the actual icon
 and wallpaper assets. It is not a screenshot or an exact promise of current KDE
-rendering. Its illustrated launcher, sidebar, and polished Dolphin controls guide
-later implementation. The installed starter uses Kickoff, Breeze controls and a
-minimal original Aurorae frame. Dolphin's menus and toolbar layout are not rewritten.
+rendering. Its illustrated launcher and sidebar now have bundled QML implementations, with
+a real application model and MPRIS player controls. The illustration still differs
+from their exact runtime layout. Application interiors use Breeze; Dolphin's menus
+and toolbar layout are not rewritten.
 
 ## Implementation milestones
 
@@ -41,8 +42,9 @@ minimal original Aurorae frame. Dolphin's menus and toolbar layout are not rewri
    controls and toolbars; document GTK/Flatpak limitations separately.
 4. **Shell polish:** complete task-button states, coordinate violet glass, expand
    icons, and tune launcher layout. Keep components optional.
-5. **Widgets:** clock/calendar and media sidebar, using KDE data sources. Do not
-   install decorative sample data as a working weather or music integration.
+5. **Widgets (0.2):** bundled launcher, clock/media sidebar and places shortcuts.
+   Test keyboard navigation, search, session actions and MPRIS against target
+   Plasma versions. No sample track or weather data is presented as live data.
 
 ISO development is intentionally outside this repository milestone. No shell
 replacement, system service, greeter change, or KDE fork is introduced.

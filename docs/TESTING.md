@@ -9,6 +9,8 @@
 - Conflict protection, symlink rejection, path traversal rejection, dry-run behavior.
 - Failure rollback, settings snapshot retention, running-session restore guard.
 - Generated vector source reproducibility in GitHub Actions.
+- Layout preflight, preservation on creation failure, and repeat installation.
+- Debian Plasma 6 widget loading under Xvfb/software rendering in CI.
 
 These tests do not replace a running KDE desktop test. No Plasma session is
 available in the authoring environment. This version is experimental.
@@ -24,7 +26,10 @@ type (Wayland/X11), display arrangement and scale for each test run.
 - [ ] Active/inactive/maximized frames, corners and title text are readable.
 - [ ] Panels, menus, tooltips, tray popups and notifications have readable text.
 - [ ] Wallpaper selection and icons work after logout/login.
-- [ ] Stock panel remains intact after normal apply and update.
+- [ ] Stock panel remains intact after theme-only apply and update.
+- [ ] Full installer replaces screen 0 panel and adds working bundled widgets.
+- [ ] Launcher search, favorites, all apps and session actions work.
+- [ ] Sidebar follows a real MPRIS player and controls playback.
 - [ ] Optional panel adds once and refuses to replace existing panels.
 - [ ] 100%, 150% and 200% scale; one and two screens; light/dark wallpaper.
 - [ ] Keyboard navigation and focus indications are visible.

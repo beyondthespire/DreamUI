@@ -13,7 +13,7 @@ PACKAGES = ['plasma-desktop', 'plasma-workspace', 'kde-cli-tools', 'kwin-common'
             'breeze', 'breeze-icon-theme', 'dolphin', 'konsole', 'kate', 'gwenview', 'elisa',
             'qml6-module-qtquick', 'qml6-module-qtquick-controls', 'qml6-module-qtquick-layouts',
             'qml6-module-qtqml-workerscript', 'qml6-module-qtquick-window', 'qml6-module-qtcore',
-            'libqt6svg6', 'qt6-svg-plugins']
+            'libqt6svg6', 'qt6-svg-plugins', 'libgl1-mesa-dri', 'libegl-mesa0']
 
 def run(*args, **kwargs):
     return subprocess.run(args, check=True, **kwargs)

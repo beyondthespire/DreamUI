@@ -44,12 +44,12 @@ PlasmoidItem {
         onRefreshed: root.allAppsModel = apps.modelForRow(0)
         Component.onCompleted: root.allAppsModel = apps.modelForRow(0)
 
-        property Kicker.SimpleFavoritesModel shortcuts: Kicker.SimpleFavoritesModel {
+        property Kicker.FavoritesModel shortcuts: Kicker.FavoritesModel {
             favorites: ["org.kde.dolphin.desktop", "systemsettings.desktop",
                         "org.kde.gwenview.desktop", "org.kde.elisa.desktop",
                         "org.kde.kate.desktop", "org.kde.konsole.desktop"]
         }
-        property Kicker.SimpleFavoritesModel session: Kicker.SimpleFavoritesModel {
+        property Kicker.FavoritesModel session: Kicker.FavoritesModel {
             favorites: ["logout", "shutdown"]
         }
     }
