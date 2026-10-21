@@ -127,12 +127,11 @@ PlasmoidItem {
                     delegate: Controls.ItemDelegate {
                         id: entry
                         required property int index
-                        required property string display
-                        required property var decoration
+                        required property var model
                         width: ListView.view.width
                         height: 43
-                        text: display
-                        Accessible.name: display
+                        text: model.display
+                        Accessible.name: model.display
                         onClicked: root.launch(list.model, index)
                         background: Rectangle {
                             radius: 3
@@ -140,8 +139,8 @@ PlasmoidItem {
                             border.color: entry.hovered ? "#9ec0df" : "transparent"
                         }
                         contentItem: RowLayout {
-                            Kirigami.Icon { source: entry.decoration; Layout.preferredWidth: 29; Layout.preferredHeight: 29 }
-                            Text { text: entry.display; color: "#203954"; font.pixelSize: 14; elide: Text.ElideRight; Layout.fillWidth: true }
+                            Kirigami.Icon { source: entry.model.decoration; Layout.preferredWidth: 29; Layout.preferredHeight: 29 }
+                            Text { text: entry.model.display; color: "#203954"; font.pixelSize: 14; elide: Text.ElideRight; Layout.fillWidth: true }
                         }
                     }
                     Text {
@@ -175,8 +174,8 @@ PlasmoidItem {
                     model: apps.session
                     Controls.Button {
                         required property int index
-                        required property string display
-                        text: display
+                        required property var model
+                        text: model.display
                         onClicked: root.launch(apps.session, index)
                     }
                 }
