@@ -1,0 +1,43 @@
+name: Validate DreamUI
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate theme assets
+        run: python3 tools/validate.py
+      - name: Test isolated deployment and restoration
+        run: python3 -m unittest discover -s tests -v
+      - name: Check shell syntax
+        run: |
+          for script in install.sh scripts/*.sh; do
+            bash -n "$script"
+          done
+      - name: Check panel script syntax
+        run: |
+          node --check layouts/classic-panel.js
+          node --check layouts/full-desktop.js
+          node tests/test_layout.js
+      - name: Check vector source reproducibility
+        run: |
+          python3 tools/build_assets.py
+          python3 tools/build_preview.py
+          git diff --exit-code -- assets docs/design/desktop-concept.svg
+  plasma-widgets:
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Plasma 6 runtime
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends python3 dbus-x11 xvfb xauth
+          python3 -c "import sys, subprocess; sys.path.insert(0, 'scripts'); from setup import PACKAGES; subprocess.run(['apt-get', 'install', '-y', '--no-install-recommends', *PACKAGES], check=True)"
+      - name: Load custom widgets with software rendering
+        run: python3 tools/smoke_widgets.py

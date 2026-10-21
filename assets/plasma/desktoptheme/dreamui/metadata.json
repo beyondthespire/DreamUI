@@ -1,0 +1,15 @@
+{
+  "KPlugin": {
+    "Name": "DreamUI Glass",
+    "Id": "dreamui",
+    "Version": "0.2.0",
+    "Description": "DreamUI \u2014 comfort, ease, and nostalgia",
+    "Authors": [
+      {
+        "Name": "DreamUI contributors"
+      }
+    ],
+    "Website": "https://github.com/beyondthespire/DreamUI"
+  },
+  "X-Plasma-API": "5.0"
+}

@@ -1,0 +1,26 @@
+[Icon Theme]
+Name=DreamUI
+Comment=Original glossy starter icons; Breeze supplies remaining icons
+Inherits=breeze,hicolor
+Directories=scalable/places,scalable/devices,scalable/apps
+
+[scalable/places]
+Size=64
+Type=Scalable
+MinSize=16
+MaxSize=256
+Context=Places
+
+[scalable/devices]
+Size=64
+Type=Scalable
+MinSize=16
+MaxSize=256
+Context=Devices
+
+[scalable/apps]
+Size=64
+Type=Scalable
+MinSize=16
+MaxSize=256
+Context=Applications

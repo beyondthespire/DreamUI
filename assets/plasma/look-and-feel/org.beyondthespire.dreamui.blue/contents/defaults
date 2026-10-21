@@ -1,0 +1,17 @@
+[kdeglobals][General]
+ColorScheme=DreamBlue
+
+[kdeglobals][KDE]
+widgetStyle=Breeze
+
+[kdeglobals][Icons]
+Theme=DreamUI
+
+[plasmarc][Theme]
+name=dreamui
+
+[kwinrc][org.kde.kdecoration2]
+library=org.kde.kwin.aurorae
+theme=__aurorae__svg__DreamGlass
+ButtonsOnLeft=M
+ButtonsOnRight=IAX
